@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -18,19 +18,22 @@ namespace ConsoleApp9
         private static Random random = new Random();
         private static char fio = 'A';
         public static Random rnd;
-        public string FIO {get;set;}
-        public int Grade {get;set;}
-        public double Perfomance {get;set;}
-        public Education Stage { get;set;}
+        public string FIO { get; set; }
+        public int Grade { get; set; }
+        public double Perfomance { get; set; }
+        public Education Stage { get; set; }
         public Student()
         {
-            Grade = random.Next(1,11);
+            Grade = random.Next(1, 11);
             FIO = Convert.ToChar(fio).ToString();
             Perfomance = Math.Round(random.NextDouble() * 5, 1);
-            fio++;
+            if (fio < 'Z')
+                fio++;
+            else
+                fio = 'A';
             EducationStage();
         }
-        public Student(string fio,int grade,double perfomance)
+        public Student(string fio, int grade, double perfomance)
         {
             FIO = fio;
             Grade = grade;
@@ -39,12 +42,12 @@ namespace ConsoleApp9
         }
         public void Pass()
         {
-            Grade = Grade+1;
+            Grade = Grade + 1;
             EducationStage();
         }
         public override string ToString()
         {
-            return $"{FIO}, {Stage} школа, {Grade} класс, {Perfomance} балла"; 
+            return $"{FIO}, {Stage} школа, {Grade} класс, {Perfomance} балла";
         }
         private void EducationStage()
         {
@@ -65,14 +68,14 @@ namespace ConsoleApp9
     public class School
     {
         public string Name { get; set; }
-        List<Student> Students = new List<Student>();   
+        List<Student> Students = new List<Student>();
         public School(string name)
         {
             Name = name;
         }
         public void Add(Student student)
-        { 
-            Students.Add(student); 
+        {
+            Students.Add(student);
         }
         public override string ToString()
         {
@@ -83,30 +86,14 @@ namespace ConsoleApp9
             }
             return result;
         }
-        public void Sort(Func<Student, IEnumerable<Student>> action)
+        public void Sort(int i)
         {
-            Students.OrderBy(action);
+            Students = Students.OrderBy(s => s.Grade).OrderBy(s => s.FIO[0]).ToList();
         }
 
         public void Sort()
         {
-            Students.OrderBy(s => s.FIO[0]);
-        }
-        public void SortChar()
-        {
-            Student student;
-            for (int i = 0; i < Students.Count; i++)
-            {
-                for (int j = 1; j < Students.Count; j++)
-                {
-                    if (Students[i].FIO.First() > Students[j].FIO.First())
-                    {
-                        student = Students[j];
-                        Students[j] = Students[i];
-                        Students[i] = student;
-                    }
-                }
-            }
+            Students = Students.OrderBy(s => s.FIO[0]).ToList();
         }
     }
     internal class Program
@@ -127,7 +114,7 @@ namespace ConsoleApp9
             school.Add(studAtaev);
             Console.WriteLine(school);
 
-            school.Sort(x => x >= 1);
+            school.Sort();
 
             Console.WriteLine(school);
         }
